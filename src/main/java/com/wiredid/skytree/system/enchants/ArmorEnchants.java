@@ -398,7 +398,7 @@ public class ArmorEnchants {
                     Player p = (Player) e.getEntity();
                     if (p.getHealth() - e.getFinalDamage() <= 0) {
                         e.setDamage(0);
-                        var maxHealthAttr = p.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                        var maxHealthAttr = p.getAttribute(Attribute.MAX_HEALTH);
                         if (maxHealthAttr != null) {
                             p.setHealth(maxHealthAttr.getValue() * 0.5);
                         }
@@ -428,7 +428,7 @@ public class ArmorEnchants {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
                 if (e.getEntity() instanceof Player) {
                     Player p = (Player) e.getEntity();
-                    var maxHealthAttr = p.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                    var maxHealthAttr = p.getAttribute(Attribute.MAX_HEALTH);
                     if (maxHealthAttr != null && p.getHealth() / maxHealthAttr.getValue() < 0.25) {
                         p.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 60, level - 1));
                         p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60, level - 1));
@@ -503,7 +503,7 @@ public class ArmorEnchants {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
                 if (e.getEntity() instanceof Player) {
                     Player p = (Player) e.getEntity();
-                    var maxHealthAttr = p.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                    var maxHealthAttr = p.getAttribute(Attribute.MAX_HEALTH);
                     if (maxHealthAttr != null && p.getHealth() / maxHealthAttr.getValue() < 0.1) {
                         p.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 100, 4));
                         p.sendMessage("§d§l[CE] §5Immortality§7: You are briefly indestructible!");

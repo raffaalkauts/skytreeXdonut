@@ -148,6 +148,24 @@ public class QuestSystem {
         }
     }
 
+    public void checkAndStartInitialQuest(Player player) {
+        PlayerData data = plugin.getPersistenceService().loadPlayerData(player.getUniqueId());
+        String activeId = data.getActiveQuestId();
+
+        // 1. If player has no active quest, find the first available unlocked quest
+        if (activeId == null || !questRegistry.containsKey(activeId)) {
+            for (QuestData quest : questRegistry.values()) {
+                if (!data.getCompletedQuests().contains(quest.id) && canStart(player.getUniqueId(), quest)) {
+                    startQuest(player, quest.id);
+                    player.sendMessage("§a§l[Quest] §7Automatically tracking quest: §e" + quest.name);
+                    break;
+                }
+            }
+        }
+
+        // 2. Perform sync (e.g. if they already have an island, money, etc.)
+        syncProgress(player);
+    }
     public void syncProgress(Player player) {
         PlayerData data = plugin.getPersistenceService().loadPlayerData(player.getUniqueId());
         String activeId = data.getActiveQuestId();
@@ -162,6 +180,11 @@ public class QuestSystem {
         int synced = current;
 
         switch (quest.type) {
+            case ISLAND_CREATE -> {
+                if (plugin.getIslandService().hasIsland(player.getUniqueId())) {
+                    synced = Math.max(current, 1);
+                }
+            }
             case MONEY_EARN -> {
                 double balance = plugin.getEconomyService().getBalance(player.getUniqueId());
                 synced = (int) Math.max(current, balance);

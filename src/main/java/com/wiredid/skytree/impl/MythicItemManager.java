@@ -215,24 +215,24 @@ public class MythicItemManager {
 
         switch (key) {
             case "attackDamage":
-                attribute = Attribute.GENERIC_ATTACK_DAMAGE;
+                attribute = Attribute.ATTACK_DAMAGE;
                 slot = EquipmentSlot.HAND;
                 break;
             case "attackSpeed":
-                attribute = Attribute.GENERIC_ATTACK_SPEED;
+                attribute = Attribute.ATTACK_SPEED;
                 slot = EquipmentSlot.HAND;
                 break;
             case "healthBonus":
-                attribute = Attribute.GENERIC_MAX_HEALTH;
+                attribute = Attribute.MAX_HEALTH;
                 break;
             case "armorBonus":
-                attribute = Attribute.GENERIC_ARMOR;
+                attribute = Attribute.ARMOR;
                 break;
             case "toughnessBonus":
-                attribute = Attribute.GENERIC_ARMOR_TOUGHNESS;
+                attribute = Attribute.ARMOR_TOUGHNESS;
                 break;
             case "speedBonus":
-                attribute = Attribute.GENERIC_MOVEMENT_SPEED;
+                attribute = Attribute.MOVEMENT_SPEED;
                 op = AttributeModifier.Operation.ADD_SCALAR;
                 break;
         }

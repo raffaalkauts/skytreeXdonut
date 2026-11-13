@@ -16,12 +16,9 @@ public class GuiUtil {
             // Fill edges
             if (isEdge(i, size)) {
                 if (inv.getItem(i) == null || inv.getItem(i).getType() == Material.AIR) {
-                    // Pattern: Alternating
-                    if (i % 2 == 0) {
-                        inv.setItem(i, primaryPane);
-                    } else {
-                        inv.setItem(i, secondaryPane);
-                    }
+                    // Use secondary only on the 4 outer corners, primary elsewhere
+                    boolean corner = (i == 0) || (i == 8) || (i == size - 9) || (i == size - 1);
+                    inv.setItem(i, corner ? secondaryPane : primaryPane);
                 }
             }
         }

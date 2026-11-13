@@ -101,7 +101,6 @@ public class QuantityGUIListener implements Listener {
 
             // Define the callback logic
             java.util.function.Consumer<Boolean> callback = (confirmed) -> {
-                plugin.getLogger().info("[DEBUG] Callback invoked! Confirmed=" + confirmed);
                 if (confirmed) {
                     // Execute transaction
                     handleTransaction(player, cleanShopItem, currentKv, price, mode, shopItemId);

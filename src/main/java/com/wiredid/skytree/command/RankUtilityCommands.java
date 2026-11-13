@@ -36,7 +36,7 @@ public class RankUtilityCommands implements CommandExecutor, org.bukkit.command.
             }
             case "heal" -> {
                 if (plugin.getRankService().hasPermission(player.getUniqueId(), "skytree.rank.heal")) {
-                    var maxHealthAttr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                    var maxHealthAttr = player.getAttribute(Attribute.MAX_HEALTH);
                     if (maxHealthAttr != null) {
                         player.setHealth(maxHealthAttr.getValue());
                     }

@@ -30,7 +30,7 @@ public class CombatEnchants {
 
                 if (random.nextInt(100) < (level * 5)) { // 5% per level
                     double heal = 1.0; // Half heart
-                    var maxHealthAttr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                    var maxHealthAttr = player.getAttribute(Attribute.MAX_HEALTH);
                     if (maxHealthAttr != null) {
                         player.setHealth(Math.min(maxHealthAttr.getValue(), player.getHealth() + heal));
                     }
@@ -183,7 +183,7 @@ public class CombatEnchants {
                     if (random.nextInt(100) < (level * 5)) {
                         Player player = (Player) e.getDamager();
                         double amount = e.getFinalDamage() * 0.1 * level;
-                        var maxHealthAttr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                        var maxHealthAttr = player.getAttribute(Attribute.MAX_HEALTH);
                         if (maxHealthAttr != null) {
                             player.setHealth(Math.min(maxHealthAttr.getValue(), player.getHealth() + amount));
                         }
@@ -212,7 +212,7 @@ public class CombatEnchants {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
                 if (e.getEntity() instanceof org.bukkit.entity.LivingEntity) {
                     org.bukkit.entity.LivingEntity victim = (org.bukkit.entity.LivingEntity) e.getEntity();
-                    var maxHealthAttr = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                    var maxHealthAttr = victim.getAttribute(Attribute.MAX_HEALTH);
                     if (maxHealthAttr != null && victim.getHealth() / maxHealthAttr.getValue() < 0.25) { // Below 25%
                                                                                                          // health
                         e.setDamage(e.getDamage() * (1.1 + (level * 0.05)));
@@ -446,7 +446,7 @@ public class CombatEnchants {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
                 if (e.getDamager() instanceof Player) {
                     Player p = (Player) e.getDamager();
-                    var maxHealthAttr = p.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                    var maxHealthAttr = p.getAttribute(Attribute.MAX_HEALTH);
                     if (maxHealthAttr != null) {
                         double hpPercent = p.getHealth() / maxHealthAttr.getValue();
                         if (hpPercent < 0.5) {

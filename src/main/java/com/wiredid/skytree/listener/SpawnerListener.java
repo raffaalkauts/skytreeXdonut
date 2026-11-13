@@ -12,6 +12,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
@@ -60,8 +62,6 @@ public class SpawnerListener implements Listener {
                 event.getPlayer().sendMessage("§7Upgrade your spawner limit or your Rank in §e/is upgrade§7!");
                 return;
             }
-            // Temporarily increment - will be re-synced if needed
-            island.setSpawnerCount(count + 1);
         }
 
         CreatureSpawner placedState = (CreatureSpawner) placed.getState();
@@ -165,6 +165,7 @@ public class SpawnerListener implements Listener {
                         hand.setAmount(hand.getAmount() - 1);
                         event.getPlayer().getInventory().setItemInMainHand(hand);
 
+                        addIslandSpawnerCount(placed, itemStackSize);
                         event.getPlayer().sendMessage("§aStacked spawner! (x" + newStack + ")");
                         updateSpawnerNametag(neighbor);
                         return; // Only merge with one
@@ -177,9 +178,65 @@ public class SpawnerListener implements Listener {
         placedState.setSpawnedType(placedType);
         placedState.getPersistentDataContainer().set(stackKey, PersistentDataType.INTEGER, itemStackSize);
         updateSpawnerStats(placedState, itemStackSize);
+        addIslandSpawnerCount(placed, itemStackSize);
         updateSpawnerNametag(placed);
     }
 
+    @EventHandler(ignoreCancelled = true)
+    public void onSpawnerInteract(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != org.bukkit.inventory.EquipmentSlot.HAND)
+            return;
+        Block clicked = event.getClickedBlock();
+        if (clicked == null || clicked.getType() != Material.SPAWNER)
+            return;
+        ItemStack hand = event.getItem();
+        if (hand == null || hand.getType() != Material.SPAWNER)
+            return;
+
+        if (!(clicked.getState() instanceof CreatureSpawner clickedSpawner))
+            return;
+
+        org.bukkit.entity.EntityType handType = null;
+        int handStack = 1;
+        if (hand.hasItemMeta() && hand.getItemMeta() instanceof BlockStateMeta bsm) {
+            if (bsm.getBlockState() instanceof CreatureSpawner metaSpawner) {
+                handType = metaSpawner.getSpawnedType();
+                handStack = metaSpawner.getPersistentDataContainer().getOrDefault(stackKey, PersistentDataType.INTEGER, 1);
+            }
+        }
+        if (handType == null) {
+            handType = clickedSpawner.getSpawnedType();
+        }
+
+        if (handType != null && clickedSpawner.getSpawnedType() == handType) {
+            Optional<com.wiredid.skytree.model.Island> optIsland = plugin.getIslandService().getIslandAtLocation(clicked.getLocation());
+            if (optIsland.isPresent() && !plugin.getIslandSettingsService().getSetting(optIsland.get(), "spawner_stacking")) {
+                return;
+            }
+
+            event.setCancelled(true);
+            if (optIsland.isPresent()) {
+                com.wiredid.skytree.model.Island isl = optIsland.get();
+                int limit = isl.getSpawnerLimit() + plugin.getRankService().getSpawnerBonus(isl.getOwnerUUID());
+                if (getOrCalculateSpawnerCount(isl) + handStack > limit) {
+                    event.getPlayer().sendMessage("§c§l[Skytree] §cSpawner limit reached! (§e" + getOrCalculateSpawnerCount(isl) + "/" + limit + "§c)");
+                    return;
+                }
+            }
+            int currentStack = clickedSpawner.getPersistentDataContainer().getOrDefault(stackKey, PersistentDataType.INTEGER, 1);
+            int newStack = currentStack + handStack;
+
+            clickedSpawner.getPersistentDataContainer().set(stackKey, PersistentDataType.INTEGER, newStack);
+            clickedSpawner.setSpawnedType(handType);
+            clickedSpawner.update(true, true);
+            updateSpawnerStats(clickedSpawner, newStack);
+
+            hand.setAmount(hand.getAmount() - 1);
+            addIslandSpawnerCount(clicked, handStack);
+            event.getPlayer().sendMessage("§aStacked spawner! (x" + newStack + ")");
+            updateSpawnerNametag(clicked);
+        }
+    }
     // Drop logic
     @EventHandler(ignoreCancelled = true)
     public void onSpawnerBreak(BlockBreakEvent event) {
@@ -230,11 +287,7 @@ public class SpawnerListener implements Listener {
         removeSpawnerNametag(block);
 
         // Update count
-        plugin.getIslandService().getIslandAtLocation(block.getLocation()).ifPresent(island -> {
-            int current = island.getSpawnerCount();
-            if (current > 0)
-                island.setSpawnerCount(current - 1);
-        });
+        addIslandSpawnerCount(block, -stackSize);
     }
 
     // Mob Stacking
@@ -325,11 +378,11 @@ public class SpawnerListener implements Listener {
                 setMobStackSize(replacement, newSize);
                 updateMobName(replacement);
 
-                if (entity.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null) {
-                    replacement.getAttribute(Attribute.GENERIC_MAX_HEALTH)
-                            .setBaseValue(entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+                if (entity.getAttribute(Attribute.MAX_HEALTH) != null) {
+                    replacement.getAttribute(Attribute.MAX_HEALTH)
+                            .setBaseValue(entity.getAttribute(Attribute.MAX_HEALTH).getValue());
                 }
-                replacement.setHealth(replacement.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+                replacement.setHealth(replacement.getAttribute(Attribute.MAX_HEALTH).getValue());
             } finally {
                 processingDeath.set(false);
             }
@@ -417,33 +470,37 @@ public class SpawnerListener implements Listener {
         }
     }
 
+    private void addIslandSpawnerCount(Block at, int delta) {
+        plugin.getIslandService().getIslandAtLocation(at.getLocation()).ifPresent(island -> {
+            int current = island.getSpawnerCount();
+            if (current < 0)
+                return; // not calculated yet; will be computed lazily from tile entities
+            island.setSpawnerCount(Math.max(0, current + delta));
+        });
+    }
+
+    /** Sum of spawner stacks on the island, read from loaded chunk tile entities (no block scan). */
     private int getOrCalculateSpawnerCount(com.wiredid.skytree.model.Island island) {
         if (island.getSpawnerCount() != -1) {
             return island.getSpawnerCount();
         }
-
-        // Calculate
-        int count = 0;
         org.bukkit.Location min = island.getMin();
         org.bukkit.Location max = island.getMax();
         org.bukkit.World world = island.getCenter().getWorld();
         if (world == null)
             return 0;
 
-        for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-            for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-                // Check all Y levels? This is slow.
-                // In Skyblock, players usually place spawners in a specific range.
-                // For now, let's scan a reasonable Y range (0 to 255) to be safe but
-                // potentially slow once.
-                for (int y = world.getMinHeight(); y < world.getMaxHeight(); y += 16) {
-                    // Optimized check: check if chunk has spawners? Bukkit doesn't have easy way.
-                    // We'll just check at 16 block intervals for chunks and then scan? No.
-                }
-                // Actually, let's just scan all Y.
-                for (int y = world.getMinHeight(); y < world.getMaxHeight(); y++) {
-                    if (world.getBlockAt(x, y, z).getType() == Material.SPAWNER) {
-                        count++;
+        int count = 0;
+        for (int cx = min.getBlockX() >> 4; cx <= (max.getBlockX() >> 4); cx++) {
+            for (int cz = min.getBlockZ() >> 4; cz <= (max.getBlockZ() >> 4); cz++) {
+                if (!world.isChunkLoaded(cx, cz))
+                    continue;
+                for (org.bukkit.block.BlockState state : world.getChunkAt(cx, cz).getTileEntities(b -> b.getType() == Material.SPAWNER, false)) {
+                    if (state instanceof CreatureSpawner cs) {
+                        int x = cs.getX(), z = cs.getZ();
+                        if (x >= min.getBlockX() && x <= max.getBlockX() && z >= min.getBlockZ() && z <= max.getBlockZ()) {
+                            count += cs.getPersistentDataContainer().getOrDefault(stackKey, PersistentDataType.INTEGER, 1);
+                        }
                     }
                 }
             }

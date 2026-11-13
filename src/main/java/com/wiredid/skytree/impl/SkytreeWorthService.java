@@ -371,10 +371,9 @@ public class SkytreeWorthService implements WorthService {
             return false;
         if (item1.getType() != item2.getType())
             return false;
-        if (item1.hasItemMeta() != item2.hasItemMeta())
-            return false;
-        if (!item1.hasItemMeta())
+        if (!item1.hasItemMeta() && !item2.hasItemMeta())
             return true;
+        // Strip worth lore first: an item whose only meta is worth lore must still match a plain item
 
         ItemStack clone1 = item1.clone();
         ItemStack clone2 = item2.clone();

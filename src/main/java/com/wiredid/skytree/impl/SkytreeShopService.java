@@ -301,6 +301,15 @@ public class SkytreeShopService implements ShopService {
                 close.setItemMeta(meta);
                 shop.setItem(49, close);
 
+                ItemStack backToMenu = new ItemStack(Material.ARROW);
+                ItemMeta bMeta = backToMenu.getItemMeta();
+                bMeta.displayName(ComponentUtil.smartParse("\u00a7c\u00a7lBack to Menu"));
+                bMeta.lore(java.util.List.of(ComponentUtil.parse("\u00a77Return to the main menu")));
+                bMeta.getPersistentDataContainer().set(new NamespacedKey(plugin, "shop_action"),
+                                PersistentDataType.STRING, "MAIN_MENU");
+                backToMenu.setItemMeta(bMeta);
+                shop.setItem(45, backToMenu);
+
                 player.openInventory(shop);
         }
 

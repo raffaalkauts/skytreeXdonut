@@ -1,7 +1,7 @@
 name: Skytree
 main: com.wiredid.skytree.SkytreePlugin
-version: 1.5
-api-version: "1.21"
+version: 4.0.0
+api-version: "26.3"
 authors: [wiredwisma]
 description: Complete SkyFactory-like SkyBlock plugin with 150+ items, Achievements, Quests, Energy System
 softdepend: [ProtocolLib]

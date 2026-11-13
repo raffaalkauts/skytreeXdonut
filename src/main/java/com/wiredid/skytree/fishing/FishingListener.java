@@ -68,6 +68,7 @@ public class FishingListener implements Listener {
             for (int i = 0; i < catchCount; i++) {
                 org.bukkit.inventory.ItemStack fish = fishingService.generateFish(player, rod);
                 fishStorage.addFish(player.getUniqueId(), fish);
+                fishingService.getPlugin().getQuestSystem().addProgress(player, com.wiredid.skytree.system.QuestSystem.QuestType.FISHING, 1);
             }
 
             player.sendMessage("§a§l[Fishing] §7Caught " + catchCount + "x fish! Sent to storage.");

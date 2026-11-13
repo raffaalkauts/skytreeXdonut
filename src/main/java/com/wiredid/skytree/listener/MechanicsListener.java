@@ -139,7 +139,7 @@ public class MechanicsListener implements Listener {
         Material type = block.getType();
         if (type != Material.DIRT && type != Material.GRASS_BLOCK && type != Material.COARSE_DIRT
                 && type != Material.ROOTED_DIRT && type != Material.PODZOL && type != Material.MYCELIUM
-                && type != Material.GRASS_PATH && type != Material.FARMLAND) return;
+                && type != Material.DIRT_PATH && type != Material.FARMLAND) return;
 
         ItemStack hand = player.getInventory().getItemInMainHand();
         if (!hand.getType().isAir()) return;
@@ -391,6 +391,7 @@ public class MechanicsListener implements Listener {
                 }
 
                 totalProcessed += amountToProcess;
+                plugin.getQuestSystem().addProgress(player, com.wiredid.skytree.system.QuestSystem.QuestType.SIEVE_USE, amountToProcess);
                 if (shiftClick) {
                     chestInv.setItem(i, null);
                 } else {
@@ -563,6 +564,7 @@ public class MechanicsListener implements Listener {
                     }
                 }
                 player.sendMessage("§7§l[Hammer] §7Crushed " + formatBlockName(block.getType()) + "!");
+                plugin.getQuestSystem().addProgress(player, com.wiredid.skytree.system.QuestSystem.QuestType.HAMMER_USE, 1);
                 return;
             }
         }

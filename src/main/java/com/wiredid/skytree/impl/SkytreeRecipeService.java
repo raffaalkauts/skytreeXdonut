@@ -567,11 +567,11 @@ public class SkytreeRecipeService implements RecipeService {
                 // These are handled by the MechanicsListener barrel handler via item ID
 
                 // 4 water_bottle → glass_water_bucket (shapeless)
-                ItemStack waterBottle = itemRegistry.getItem("water_bottle");
+                ItemStack waterBottleItem = itemRegistry.getItem("water_bottle");
                 ItemStack glassBucket = itemRegistry.getItem("glass_water_bucket");
-                if (waterBottle != null && glassBucket != null) {
+                if (waterBottleItem != null && glassBucket != null) {
                         addShapelessRecipeExact("glass_water_bucket", glassBucket, 1,
-                                        waterBottle, waterBottle, waterBottle, waterBottle);
+                                        waterBottleItem, waterBottleItem, waterBottleItem, waterBottleItem);
                 }
 
                 // Keep dirt_essence crafting recipe (4 → dirt)

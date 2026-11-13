@@ -417,7 +417,7 @@ public class MythicItemEffectListener implements Listener {
         // Divinebreaker: Lifesteal 10%
         if (id.equals("divinebreaker")) {
             double heal = event.getFinalDamage() * 0.10;
-            double max = player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).getValue();
+            double max = player.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).getValue();
             if (player.getHealth() + heal <= max)
                 player.setHealth(player.getHealth() + heal);
             else
@@ -427,7 +427,7 @@ public class MythicItemEffectListener implements Listener {
         // Vanguard Blade: Lifesteal 2%
         if (id.equals("vanguard_blade")) {
             double heal = event.getFinalDamage() * 0.02;
-            double max = player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).getValue();
+            double max = player.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).getValue();
             if (player.getHealth() + heal <= max)
                 player.setHealth(player.getHealth() + heal);
             else

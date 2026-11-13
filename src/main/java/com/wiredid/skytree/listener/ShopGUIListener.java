@@ -68,6 +68,14 @@ public class ShopGUIListener implements Listener {
                 String action = clicked.getItemMeta().getPersistentDataContainer().get(
                         new org.bukkit.NamespacedKey(plugin, "shop_action"),
                         org.bukkit.persistence.PersistentDataType.STRING);
+                if ("MAIN_MENU".equals(action)) {
+                    if (plugin.getMainMenuGUI() != null) {
+                        plugin.getMainMenuGUI().open(player);
+                    } else {
+                        player.closeInventory();
+                    }
+                    return;
+                }
                 if ("SEARCH".equals(action)) {
                     player.closeInventory();
                     player.sendMessage("§6§lShop §8» §eEnter search query in chat:");

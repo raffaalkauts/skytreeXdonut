@@ -28,7 +28,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Main plugin class for Skytree - Complete SkyFactory-like SkyBlock plugin
- * Version 1.0.0-beta - Development Phase
+ * Version 4.0.0 - Paper 26.3 release
  */
 public class SkytreePlugin extends JavaPlugin {
 
@@ -810,6 +810,9 @@ public class SkytreePlugin extends JavaPlugin {
         TrashCommand trashCmd = new TrashCommand(this);
         safeRegisterCommand("trash", trashCmd, trashCmd);
         getServer().getPluginManager().registerEvents(trashCmd, this);
+        getServer().getPluginManager().registerEvents(new com.wiredid.skytree.listener.GuiGuardListener(), this);
+        getServer().getPluginManager().registerEvents(new com.wiredid.skytree.listener.SneakGrowListener(), this);
+        getServer().getPluginManager().registerEvents(new com.wiredid.skytree.listener.MenuNavListener(this), this);
 
         // Jobs Command
         safeRegisterCommand("jobs", (sender, command, label, args) -> {
@@ -1336,6 +1339,7 @@ public class SkytreePlugin extends JavaPlugin {
         if (jobService != null) {
             jobService.onDisable();
         }
+        com.wiredid.skytree.gui.ConfirmationGUI.clearPendingCallbacks();
         getLogger().info("Skytree disabled.");
     }
 

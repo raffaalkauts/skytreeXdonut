@@ -82,7 +82,8 @@ public class FishSellGUI implements Listener {
         for (int i = 0; i < 45; i++) {
             ItemStack item = inventory.getItem(i);
             if (item != null && item.getType() != Material.AIR) {
-                event.getPlayer().getInventory().addItem(item);
+                if (event.getPlayer() instanceof Player p) { addItemSafely(p, item); }
+                inventory.setItem(i, null);
             }
         }
     }
@@ -102,15 +103,22 @@ public class FishSellGUI implements Listener {
                     // Fallback if price not saved
                     double weight = NbtUtils.getDouble(item, NbtUtils.KEY_FISH_WEIGHT);
                     String mutStr = NbtUtils.getString(item, NbtUtils.KEY_FISH_MUTATION);
-                    FishingModels.Mutation mutation = FishingModels.Mutation.valueOf(mutStr);
-                    price = weight * mutation.getPriceMultiplier() * 1.5;
+                    double multiplier = 1.0;
+                    try {
+                        multiplier = FishingModels.Mutation.valueOf(mutStr).getPriceMultiplier();
+                    } catch (IllegalArgumentException | NullPointerException ignored) {
+                        // unknown mutation: base multiplier
+                    }
+                    price = weight * multiplier * 1.5;
                 }
 
                 total += price;
                 toRemove.add(item);
+                inventory.setItem(i, null);
             } else {
-                // Return non-fish
-                player.getInventory().addItem(item);
+                // Return non-fish (drops at feet if inventory full) and remove from grid
+                addItemSafely(player, item);
+                inventory.setItem(i, null);
             }
         }
 
@@ -128,5 +136,17 @@ public class FishSellGUI implements Listener {
         }
 
         player.closeInventory();
+    }
+
+    private void addItemSafely(Player player, ItemStack item) {
+        if (item == null || item.getType() == org.bukkit.Material.AIR) {
+            return;
+        }
+        java.util.HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(item);
+        if (!leftover.isEmpty()) {
+            for (ItemStack drop : leftover.values()) {
+                player.getWorld().dropItemNaturally(player.getLocation(), drop);
+            }
+        }
     }
 }

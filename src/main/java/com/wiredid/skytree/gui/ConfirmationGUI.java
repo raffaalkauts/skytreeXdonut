@@ -32,6 +32,10 @@ public class ConfirmationGUI implements Listener {
     // Callback storage (Active pending confirmations per player)
     private static final java.util.Map<java.util.UUID, Consumer<Boolean>> pendingCallbacks = new java.util.HashMap<>();
 
+    /** Clears all pending callbacks (call on plugin disable/reload). */
+    public static void clearPendingCallbacks() {
+        pendingCallbacks.clear();
+    }
     public ConfirmationGUI(SkytreePlugin plugin) {
         this.plugin = plugin;
         this.ACTION_KEY = new NamespacedKey(plugin, "confirm_action");
@@ -41,7 +45,7 @@ public class ConfirmationGUI implements Listener {
         Inventory gui = Bukkit.createInventory(null, 27, ComponentUtil.smartParse(title));
 
         // Premium Border with "Confirmation" name
-        ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemStack glass = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta gMeta = glass.getItemMeta();
         gMeta.displayName(ComponentUtil.smartParse("§7Confirmation"));
         glass.setItemMeta(gMeta);
@@ -183,7 +187,6 @@ public class ConfirmationGUI implements Listener {
                     || title.contains("Cancel")) {
                 Consumer<Boolean> callback = pendingCallbacks.remove(player.getUniqueId());
                 if (callback != null) {
-                    plugin.getLogger().info("[DEBUG] Confirmation GUI closed - auto-cancelling");
                     callback.accept(false);
                 }
             }

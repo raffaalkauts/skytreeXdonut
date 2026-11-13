@@ -1,111 +1,95 @@
-# Skytree Plugin
+# Skytree
 
-**Version:** 3.2.1  
-**Target:** PaperMC 1.21 / Java 21  
-**Type:** SkyFactory-like SkyBlock plugin with 80+ features
+**Version:** 4.0.0  
+**Target:** PaperMC 26.3 / Java 25  
+**Type:** SkyFactory-like SkyBlock plugin (150+ items, achievements, quests, energy system)
 
-## 🚀 Features Implemented
+## Overview
 
-### Core Systems ✅
-- **Void World Generation**: Custom chunk generator for empty skyblock world
-- **Island Management**: Create, delete, and teleport to islands
-- **SkyFactory 3 Template**: Bedrock + 3 Dirt + Oak Tree generation
-- **Anti-Dupe**: Strict one-island-per-player enforcement
-- **Island Protection**: Members-only building permissions
-- **YAML Persistence**: Standalone data storage (no external plugins needed)
+Skytree is a self-contained Paper plugin that generates a void SkyBlock world and provides a
+progression-oriented SkyFactory experience: islands, custom items, sieves, barrels, crucibles,
+economy, shops, auctions, banking, fishing, minions, crates, quests, and more. No external
+plugins are required for core gameplay.
 
-### Economy System ✅
-- **USDT Currency**: Custom in-game currency (USD TETHER)
-- **Commands**: `/bal`, `/btc`, `/money`, `/pay`
-- **Starting Balance**: 100 USDT per player
+## Requirements
 
-### Custom Items (50+) ✅
-- **Crooks**: Wooden, Stone (for extra leaf drops + Silkworms)
-- **Hammers**: Wood, Stone, Iron, Diamond (Cobble → Gravel → Sand → Dust)
-- **Meshes**: String, Flint, Iron, Diamond (for Sieve)
-- **Pebbles**: Stone, Granite, Diorite, Andesite
-- **Dusts**: Iron, Gold, Copper, Tin, Aluminum, Silver, Lead, Nickel
-- **Ore Pieces**: Iron, Gold, Copper, Diamond, Emerald, Coal
-- **Silkworms**: Infest leaves to get String
-- **Machines**: Sieve, Barrel, Crucible
+- Java 25 (Temurin or equivalent)
+- Paper 26.3 server
+- Maven 3.9+ (for building from source)
 
-### Shop System ✅
-- **Iridium-Style GUI**: Category-based shop
-- **Categories**: Blocks, Farming, Mob Drops, Minerals, Custom Items, Machines, Energy
-- **Command**: `/shop`
-
-### Commands ✅
-- `/is create` (alias: `c`) - Create island
-- `/is home` (alias: `h`) - Teleport home
-- `/is delete` (alias: `del`) - Delete island
-- `/is stats` (alias: `s`) - View stats
-- `/is level` - Calculate level (WIP)
-- `/is top` - Leaderboards (WIP)
-- `/is biome` - Change biome (WIP)
-- `/is settings` - Island settings (WIP)
-- `/is upgrade` - Upgrade island (WIP)
-- `/is perms` (alias: `p`) - Permissions (WIP)
-- `/bal`, `/btc`, `/money` - Check balance
-- `/pay <player> <amount>` - Send money
-- `/shop` - Open shop
-
-### Mechanics ✅
-- **Hammer**: Downgrades blocks (Cobble → Gravel → Sand → Dust)
-- **Crook**: 10% chance for Silkworms from leaves
-- **Silkworm**: Right-click on leaves to infest (drops String after 10s)
-
-## 📦 Building
+## Building
 
 ```bash
 mvn clean package
 ```
 
-The compiled JAR will be in `target/Skytree-v3.2.0.jar`
+The compiled jar is written to `target/Skytree-v4.0.0.jar`.
 
-## 🎮 Getting Started
+## Installation
 
-1. Place the JAR in your `plugins/` folder
-2. Start the server
-3. Join and type `/is create` to get your island
-4. Break leaves with your hands to get saplings
-5. Craft items or use `/shop` to buy materials
-6. Progress through the Ex Nihilo mechanics!
+1. Build or download the jar.
+2. Place `Skytree-v4.0.0.jar` into the server `plugins/` folder.
+3. Start the server once to generate `plugins/Skytree/` and default configs.
+4. Join and run `/is create` (or `/is c`) to create your island.
 
-## 🛠️ Planned Features (Work in Progress)
+## Quick Start
 
-- Machine GUIs (Sieve, Barrel, Crucible, Cobble Generator)
-- Energy System (Flux, Generators, Cables)
-- Island Upgrades (Size, Members, Generator)
-- Leaderboards
-- Biome changing
-- Advanced permissions system
-- Witch Water mechanics
-- Mob transformations
-- 50+ more items to reach 100+
+1. `/is create` - create your island.
+2. Break leaves by hand to obtain saplings and basic resources.
+3. Use `/shop` to buy materials or `/sg` to sell items.
+4. Progress through crooks, hammers, meshes, sieves, barrels, and crucibles.
 
-## 📝 Configuration
+## Core Systems
 
-Edit `config.yml` to customize:
-- World name
-- Island spacing
-- Starting balance
-- Machine tick rates
+- Void world generation with SkyFactory 3 style island template
+- One island per player with protection and member permissions
+- USDT economy with `/bal`, `/btc`, `/money`, `/pay`
+- 150+ custom items: crooks, hammers, meshes, pebbles, dusts, ore pieces, silkworms, machines
+- Iridium-style category shop (`/shop`)
+- Sieve, barrel, and crucible mechanics
+- Fishing, enchanting, crates, minions, banking, auctions, bounties
+- Quests, achievements, daily rewards, leaderboards
+- Shards, tags, kits, warps, trust levels
 
-## 🤝 Commands & Permissions
+## Main Commands
 
-All commands support aliases for efficiency:
-- Main: `/skytree`, `/is`, `/island`
-- Balance: `/bal`, `/btc`, `/money`, `/balance`
+| Command | Description |
+| --- | --- |
+| `/is create` (`c`) | Create an island |
+| `/is home` (`h`) | Teleport home |
+| `/is delete` (`del`) | Delete island |
+| `/is stats` (`s`) | View island stats |
+| `/shop` | Open global shop |
+| `/bal` | Check balance |
+| `/pay <player> <amount>` | Send money |
+| `/sg` / `/sell` | Open sell GUI |
+| `/vault` | Open personal storage |
+| `/menu` | Open main menu |
+| `/guide` | Open in-game guide |
 
-**Permissions:**
-- `skytree.use` - Basic usage (default: true)
-- `skytree.admin` - Admin commands (default: op)
-- `skytree.bypass` - Bypass protections (default: op)
+See `src/main/resources/plugin.yml` for the full command and permission list.
 
-## 📚 Credits
+## Permissions
 
-Created with Antigravity AI Assistant for PaperMC 1.21
+- `skytree.use` - basic usage (default: true)
+- `skytree.admin` - admin commands (default: op)
+- `skytree.bypass` - bypass protections (default: op)
+- `skytree.give` - give custom items (default: op)
 
----
+## Configuration
 
-**Status**: Premium UI Release - All features functional, stable release
+All configuration and data files live under `plugins/Skytree/` after first run.
+Key files: `config.yml`, `items.yml`, `shop.yml`, `quests.yml`, `worth.yml`.
+Edit these to customize world name, island spacing, starting balance, machine rates, etc.
+
+## Development
+
+- Source of truth is `src/main/java` and `src/main/resources`.
+- Plugin bootstrap: `com.wiredid.skytree.SkytreePlugin`.
+- Architecture notes: `architecture.md`.
+- Product requirements: `prd.md`.
+
+## Status
+
+Active development. Some advanced systems (energy networks, island upgrades, biome changing)
+are still being expanded. Core SkyFactory progression is functional.

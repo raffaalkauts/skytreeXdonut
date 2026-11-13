@@ -28,6 +28,7 @@ public class FishingService {
     // Mock Database of Fish (In a real app, load from config/JSON)
     private final List<Fish> fishDatabase = new ArrayList<>();
 
+    public SkytreePlugin getPlugin() { return plugin; }
     public FishingService(SkytreePlugin plugin, PersistenceService persistence) {
         this.plugin = plugin;
 
@@ -267,7 +268,7 @@ public class FishingService {
     private void applyUtilityEnchants(Player player, Map<RodEnchant, Integer> enchants) {
         if (enchants.containsKey(RodEnchant.OCEAN_GRACE)) {
             double heal = enchants.get(RodEnchant.OCEAN_GRACE);
-            double maxHealth = player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).getValue();
+            double maxHealth = player.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).getValue();
             player.setHealth(Math.min(maxHealth, player.getHealth() + heal));
         }
         if (enchants.containsKey(RodEnchant.ADRENALINE_RUSH)) {
@@ -746,6 +747,7 @@ public class FishingService {
                     storage.addFish(player.getUniqueId(), fish);
                 }
 
+                plugin.getQuestSystem().addProgress(player, com.wiredid.skytree.system.QuestSystem.QuestType.FISHING, 1);
                 checkFirstTimeHint(player);
                 scheduleAutoCast(player);
             }

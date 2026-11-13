@@ -31,6 +31,10 @@ public class PlayerJoinQuitListener implements Listener {
         }
 
         // Unlock recipes for the player
+        if (plugin.getQuestSystem() != null) {
+            plugin.getQuestSystem().checkAndStartInitialQuest(event.getPlayer());
+        }
+
         if (plugin.getMythicItemManager() != null) {
             plugin.getMythicItemManager().unlockRecipes(event.getPlayer());
         }

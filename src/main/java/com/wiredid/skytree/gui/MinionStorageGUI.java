@@ -21,9 +21,11 @@ import java.util.UUID;
 public class MinionStorageGUI implements Listener {
 
     private final MinionService minionService;
+    private final org.bukkit.NamespacedKey minionIdKey;
 
     public MinionStorageGUI(SkytreePlugin plugin, MinionService minionService) {
         this.minionService = minionService;
+        this.minionIdKey = new org.bukkit.NamespacedKey(plugin, "minion_id");
     }
 
     public void open(Player player, UUID minionId) {
@@ -51,7 +53,8 @@ public class MinionStorageGUI implements Listener {
         ItemStack collect = new ItemStack(Material.CHEST_MINECART);
         ItemMeta meta = collect.getItemMeta();
         meta.displayName(ComponentUtil.parse("§a§lCollect All"));
-        meta.lore(ComponentUtil.parseList("§7Click to move all items to inventory", "§7", "§8ID: " + minionId));
+        meta.getPersistentDataContainer().set(minionIdKey, org.bukkit.persistence.PersistentDataType.STRING, minionId.toString());
+        meta.lore(ComponentUtil.parseList("§7Click to move all items to inventory"));
         collect.setItemMeta(meta);
         inv.setItem(49, collect);
 
@@ -71,11 +74,17 @@ public class MinionStorageGUI implements Listener {
         Player player = (Player) event.getWhoClicked();
 
         if (event.getRawSlot() == 49) {
-            // Find ID from lore or use a better way (Holder?)
-            // For now, let's assume we use a holder for better safety
-            // but I'll check the lore for now to save time on holder creation.
-            String idStr = ComponentUtil.toLegacy(item.getItemMeta().lore().get(2)).replace("§8ID: ", "");
-            UUID minionId = UUID.fromString(idStr);
+            // ID is stored in the button's PersistentDataContainer (not lore)
+            ItemMeta clickedMeta = item.getItemMeta();
+            if (clickedMeta == null) return;
+            String idStr = clickedMeta.getPersistentDataContainer().get(minionIdKey, org.bukkit.persistence.PersistentDataType.STRING);
+            if (idStr == null) return;
+            UUID minionId;
+            try {
+                minionId = UUID.fromString(idStr);
+            } catch (IllegalArgumentException ex) {
+                return;
+            }
 
             List<ItemStack> items = minionService.clearStorage(minionId);
             for (ItemStack stack : items) {

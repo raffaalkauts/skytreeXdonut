@@ -161,6 +161,11 @@ public class SkytreeAuctionHouseService implements AuctionHouseService {
      * metadata.
      */
     private boolean removeItemsCorrectly(Player player, ItemStack template, int amount) {
+        return removeItemsCorrectly(player, template, amount, false);
+    }
+
+    /** @param typeOnly when true, any item of the same material counts (non-strict orders). */
+    private boolean removeItemsCorrectly(Player player, ItemStack template, int amount, boolean typeOnly) {
         int remaining = amount;
         ItemStack[] contents = player.getInventory().getContents();
         WorthService worth = plugin.getWorthService();
@@ -170,7 +175,9 @@ public class SkytreeAuctionHouseService implements AuctionHouseService {
             if (is == null)
                 continue;
 
-            if (worth.isSimilarIgnoringWorth(is, template)) {
+            boolean match = typeOnly ? is.getType() == template.getType()
+                    : worth.isSimilarIgnoringWorth(is, template);
+            if (match) {
                 if (is.getAmount() <= remaining) {
                     remaining -= is.getAmount();
                     player.getInventory().setItem(i, null);
@@ -393,7 +400,7 @@ public class SkytreeAuctionHouseService implements AuctionHouseService {
             return false;
 
         // Perform inventory removal using worth-ignoring logic
-        if (!removeItemsCorrectly(seller, items, fillAmount)) {
+        if (!removeItemsCorrectly(seller, items, fillAmount, !order.isStrictMatch())) {
             return false;
         }
 

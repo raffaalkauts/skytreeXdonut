@@ -34,7 +34,7 @@ public class ComponentUtil {
 
         if (translated.contains("<") && translated.contains(">")) {
             // Convert main legacy codes to MiniMessage tags
-            String mm = translated
+            String mm = convertHex(translated)
                     .replace("§0", "<black>").replace("§1", "<dark_blue>").replace("§2", "<dark_green>")
                     .replace("§3", "<dark_aqua>").replace("§4", "<dark_red>").replace("§5", "<dark_purple>")
                     .replace("§6", "<gold>").replace("§7", "<gray>").replace("§8", "<dark_gray>")
@@ -48,10 +48,20 @@ public class ComponentUtil {
             } catch (Exception e) {
                 // If MiniMessage fails (due to unknown tags like <n3>), fall back to legacy
                 // parse but strip brackets or escape them
-                return parse(translated);
+                return parse(stripUnknownTags(translated));
             }
         }
         return parse(translated);
+    }
+
+    /** Convert section-sign hex (x-r-r-g-g-b-b) colors to MiniMessage hex tags. */
+    private static String convertHex(String s) {
+        return s.replaceAll("(?i)\u00a7x\u00a7([0-9a-f])\u00a7([0-9a-f])\u00a7([0-9a-f])\u00a7([0-9a-f])\u00a7([0-9a-f])\u00a7([0-9a-f])", "<#$1$2$3$4$5$6>");
+    }
+
+    /** Remove tag fragments so a failed MiniMessage parse never leaks raw tags into the UI. */
+    private static String stripUnknownTags(String s) {
+        return s.replaceAll("<[^<>\u00a7]{1,40}>", "");
     }
 
     /**

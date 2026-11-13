@@ -69,8 +69,9 @@ public class QuestGUIListener implements Listener {
                     return;
                 }
 
-                if (questSystem.getActiveQuest(player.getUniqueId()) != null) {
-                    player.sendMessage("§c§l[Quest] §cYou already have an active quest!");
+                QuestData currentActive = questSystem.getActiveQuest(player.getUniqueId());
+                if (currentActive != null && currentActive.id.equals(quest.id)) {
+                    player.sendMessage("§e§l[Quest] §7This quest is already being tracked!");
                     return;
                 }
 

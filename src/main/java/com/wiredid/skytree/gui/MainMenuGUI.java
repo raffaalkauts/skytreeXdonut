@@ -31,7 +31,7 @@ public class MainMenuGUI implements Listener {
     }
 
     public void open(Player player) {
-        Inventory inv = Bukkit.createInventory(null, 54, ComponentUtil.smartParse("§8§lMain Menu"));
+        Inventory inv = Bukkit.createInventory(null, 54, ComponentUtil.smartParse("§f§lMain Menu"));
 
         for (int i = 0; i < 54; i++) {
             inv.setItem(i, createPane());
@@ -40,35 +40,35 @@ public class MainMenuGUI implements Listener {
         inv.setItem(13, createPlayerHead(player));
 
         // 🏝️ ISLAND (row 1: 9-17)
-        inv.setItem(9, createButton(Material.GRASS_BLOCK, "§a§lISLAND HOME", "ISLAND_HOME", "§7Teleport to your island", "", "§eClick"));
-        inv.setItem(10, createButton(Material.ENDER_PEARL, "§d§lWARPS", "WARPS", "§7Island warp points", "", "§eClick"));
-        inv.setItem(11, createButton(Material.ZOMBIE_HEAD, "§2§lMINIONS", "MINIONS", "§7Manage your minions", "", "§eClick"));
-        inv.setItem(14, createButton(Material.ANVIL, "§6§lUPGRADES", "UPGRADES", "§7Upgrade your island", "", "§eClick"));
-        inv.setItem(15, createButton(Material.PLAYER_HEAD, "§b§lMEMBERS", "MEMBERS", "§7Manage island members", "", "§eClick"));
-        inv.setItem(16, createButton(Material.OAK_FENCE_GATE, "§7§lISLAND SETTINGS", "ISLAND_SETTINGS", "§7Configure island", "", "§eClick"));
+        inv.setItem(9, createButton(Material.GRASS_BLOCK, "§a§lISLAND HOME", "ISLAND_HOME", "§7Teleport to your island", "", "§8» §eClick to open"));
+        inv.setItem(10, createButton(Material.ENDER_PEARL, "§a§lWARPS", "WARPS", "§7Island warp points", "", "§8» §eClick to open"));
+        inv.setItem(11, createButton(Material.ZOMBIE_HEAD, "§a§lMINIONS", "MINIONS", "§7Manage your minions", "", "§8» §eClick to open"));
+        inv.setItem(14, createButton(Material.ANVIL, "§a§lUPGRADES", "UPGRADES", "§7Upgrade your island", "", "§8» §eClick to open"));
+        inv.setItem(15, createButton(Material.PLAYER_HEAD, "§a§lMEMBERS", "MEMBERS", "§7Manage island members", "", "§8» §eClick to open"));
+        inv.setItem(16, createButton(Material.OAK_FENCE_GATE, "§a§lISLAND SETTINGS", "ISLAND_SETTINGS", "§7Configure island", "", "§8» §eClick to open"));
 
         // 💰 ECONOMY (row 2: 18-26)
-        inv.setItem(18, createButton(Material.GOLD_INGOT, "§6§lBANK", "BANK", "§7Deposit, withdraw, transfer", "", "§eClick"));
-        inv.setItem(19, createButton(Material.DIAMOND_PICKAXE, "§b§lJOBS", "JOBS", "§7View job progression", "", "§eClick"));
-        inv.setItem(20, createButton(Material.EMERALD, "§a§lSHOP", "SHOP", "§7Buy and sell items", "", "§eClick"));
-        inv.setItem(21, createButton(Material.GOLDEN_HORSE_ARMOR, "§e§lMARKET", "MARKET", "§7Player Auction House", "", "§eClick"));
-        inv.setItem(22, createButton(Material.TOTEM_OF_UNDYING, "§c§lBOUNTIES", "BOUNTIES", "§7View and set bounties", "", "§eClick"));
-        inv.setItem(23, createButton(Material.ENDER_EYE, "§d§lSHARD SHOP", "SHARDS", "§7Spend your shards", "", "§eClick"));
-        inv.setItem(24, createButton(Material.SUNFLOWER, "§e§lINVESTMENTS", "INVESTMENTS", "§7Bonds and investments", "", "§eClick"));
+        inv.setItem(18, createButton(Material.GOLD_INGOT, "§6§lBANK", "BANK", "§7Deposit, withdraw, transfer", "", "§8» §eClick to open"));
+        inv.setItem(19, createButton(Material.DIAMOND_PICKAXE, "§6§lJOBS", "JOBS", "§7View job progression", "", "§8» §eClick to open"));
+        inv.setItem(20, createButton(Material.EMERALD, "§6§lSHOP", "SHOP", "§7Buy and sell items", "", "§8» §eClick to open"));
+        inv.setItem(21, createButton(Material.GOLDEN_HORSE_ARMOR, "§6§lMARKET", "MARKET", "§7Player Auction House", "", "§8» §eClick to open"));
+        inv.setItem(22, createButton(Material.TOTEM_OF_UNDYING, "§6§lBOUNTIES", "BOUNTIES", "§7View and set bounties", "", "§8» §eClick to open"));
+        inv.setItem(23, createButton(Material.ENDER_EYE, "§6§lSHARD SHOP", "SHARDS", "§7Spend your shards", "", "§8» §eClick to open"));
+        inv.setItem(24, createButton(Material.SUNFLOWER, "§6§lINVESTMENTS", "INVESTMENTS", "§7Bonds and investments", "", "§8» §eClick to open"));
 
         // 🎮 FEATURES (row 3: 27-35)
-        inv.setItem(27, createButton(Material.KNOWLEDGE_BOOK, "§d§lQUESTS", "QUESTS", "§7Complete quests for rewards", "", "§eClick"));
-        inv.setItem(28, createButton(Material.CHEST, "§5§lCRATES", "CRATES", "§7Open crates and keys", "", "§eClick"));
-        inv.setItem(29, createButton(Material.CLOCK, "§6§lDAILY REWARDS", "DAILY", "§7Claim daily rewards", "", "§eClick"));
-        inv.setItem(30, createButton(Material.BEACON, "§b§lLEADERBOARD", "LEADERBOARD", "§7View server top lists", "", "§eClick"));
-        inv.setItem(31, createButton(Material.CRAFTING_TABLE, "§a§lITEMS CATALOG", "ITEMS", "§7Browse all custom items", "", "§eClick"));
-        inv.setItem(32, createButton(Material.DIAMOND_SWORD, "§b§lKITS", "KITS", "§7Claim your kits", "", "§eClick"));
-        inv.setItem(34, createButton(Material.GOLD_BLOCK, "§6§lTEAM BANK", "TEAM_BANK", "§7Shared island bank", "", "§eClick"));
+        inv.setItem(27, createButton(Material.KNOWLEDGE_BOOK, "§b§lQUESTS", "QUESTS", "§7Complete quests for rewards", "", "§8» §eClick to open"));
+        inv.setItem(28, createButton(Material.CHEST, "§b§lCRATES", "CRATES", "§7Open crates and keys", "", "§8» §eClick to open"));
+        inv.setItem(29, createButton(Material.CLOCK, "§b§lDAILY REWARDS", "DAILY", "§7Claim daily rewards", "", "§8» §eClick to open"));
+        inv.setItem(30, createButton(Material.BEACON, "§b§lLEADERBOARD", "LEADERBOARD", "§7View server top lists", "", "§8» §eClick to open"));
+        inv.setItem(31, createButton(Material.CRAFTING_TABLE, "§b§lITEMS CATALOG", "ITEMS", "§7Browse all custom items", "", "§8» §eClick to open"));
+        inv.setItem(32, createButton(Material.DIAMOND_SWORD, "§b§lKITS", "KITS", "§7Claim your kits", "", "§8» §eClick to open"));
+        inv.setItem(34, createButton(Material.GOLD_BLOCK, "§6§lTEAM BANK", "TEAM_BANK", "§7Shared island bank", "", "§8» §eClick to open"));
 
         // ⚙️ BOTTOM (row 5: 45-53)
-        inv.setItem(45, createButton(Material.COMPARATOR, "§7§lSETTINGS", "SETTINGS", "§7Configure preferences", "", "§eClick"));
-        inv.setItem(47, createButton(Material.FISHING_ROD, "§b§lFISHING", "FISHING", "§7Manage fishing", "", "§eClick"));
-        inv.setItem(49, createButton(Material.BOOK, "§a§lGUIDE", "GUIDE", "§7How to play Skytree", "", "§eClick"));
+        inv.setItem(45, createButton(Material.COMPARATOR, "§7§lSETTINGS", "SETTINGS", "§7Configure preferences", "", "§8» §eClick to open"));
+        inv.setItem(47, createButton(Material.FISHING_ROD, "§7§lFISHING", "FISHING", "§7Manage fishing", "", "§8» §eClick to open"));
+        inv.setItem(49, createButton(Material.BOOK, "§7§lGUIDE", "GUIDE", "§7How to play Skytree", "", "§8» §eClick to open"));
         inv.setItem(53, createButton(Material.BARRIER, "§c§lCLOSE", "CLOSE", "§7Close this menu"));
 
         player.openInventory(inv);
@@ -118,7 +118,7 @@ public class MainMenuGUI implements Listener {
     }
 
     private ItemStack createPane() {
-        ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemStack item = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta meta = item.getItemMeta();
         meta.displayName(ComponentUtil.parse(" "));
         item.setItemMeta(meta);
@@ -127,7 +127,7 @@ public class MainMenuGUI implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (!event.getView().title().equals(ComponentUtil.smartParse("§8§lMain Menu")))
+        if (!event.getView().title().equals(ComponentUtil.smartParse("§f§lMain Menu")))
             return;
         event.setCancelled(true);
 
@@ -143,6 +143,7 @@ public class MainMenuGUI implements Listener {
         if (action == null)
             return;
 
+        com.wiredid.skytree.listener.MenuNavListener.markFromMenu(player);
         player.closeInventory();
 
         switch (action) {
